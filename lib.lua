@@ -7,11 +7,10 @@ pcmdDK.darkSimSpells = {
 }
 
 ProbablyEngine.condition.register("shouldInterrupt", function(unit)
+	if not ProbablyEngine.condition["modifier.toggle"]('interrupt') then return false end
 	local stop = ProbablyEngine.condition["casting"](unit)
 	if stop then SpellStopCasting() end
-		return stop
-	end
-	return false
+	return stop
 end)
 
 function pcmdDK.shoulDarkSimUnit(unit)
@@ -41,6 +40,11 @@ function pcmdDK.canCastPlagueLeech(timeLeft)
 	if durationBP <= timeLeft then
 		return true
 	end
+	return false
+end
+
+function pcmdDK.bloodRuneCheck()
+	if GetRuneType(1) ~= 4 and GetRuneType(2) ~= 4 then return true end
 	return false
 end
 
