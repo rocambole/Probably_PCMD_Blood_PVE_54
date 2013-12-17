@@ -14,23 +14,13 @@ ProbablyEngine.condition.register("shouldInterrupt", function(unit)
 	return false
 end)
 
-pcmdDK.shouldDarkSimFocus = function() end
 function pcmdDK.shoulDarkSimUnit(unit)
 	for index,spellName in pairs(pcmdDK.darkSimSpells) do
-		
-		if jps.IsCastingSpell(spellName, unit) then return true end
-		if jps.IsChannelingSpell(spellName, unit) then return true end
+		if ProbablyEngine.condition["casting"](unit, spellName) then return true end
 	end
 	return false
 end
 
-function pcmdDK.shouldDarkSimTarget()
-	return pcmdDK.shoulDarkSimUnit("target")
-end
-
-function pcmdDK.shouldDarkSimFocus()
-	return pcmdDK.shoulDarkSimUnit("focus")
-end
 
 function pcmdDK.canCastPlagueLeech(timeLeft)
 	local frostFeverApplied, _, ffExpires, ffCaster = UnitDebuff("target","Frost Fever","player")

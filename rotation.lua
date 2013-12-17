@@ -30,8 +30,8 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 	{"Asphyxiate",	{'focus.shouldInterrupt','!player.modifier.last(Mind Freeze)'}, "focus"},
 
 	-- Spell Steal
-	{"Dark Simulacrum ", '@pcmdDK.shouldDarkSimTarget()' , "target"},
-	{"Dark Simulacrum ", '@pcmdDK.shouldDarkSimFocus()' , "focus"},
+	{"Dark Simulacrum ", '@pcmdDK.shoulDarkSimUnit(target)' , "target"},
+	{"Dark Simulacrum ", '@pcmdDK.shoulDarkSimUnit(focus)' , "focus"},
 
 	{"Raise Dead",	{'modifier.cooldowns','!pet.alive'}},
 	
