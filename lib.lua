@@ -7,11 +7,10 @@ pcmdDK.darkSimSpells = {
 }
 
 ProbablyEngine.condition.register("shouldInterrupt", function(unit)
+	if not ProbablyEngine.condition["modifier.toggle"]('interrupt') then return false end
 	local stop = ProbablyEngine.condition["casting"](unit)
 	if stop then SpellStopCasting() end
-		return stop
-	end
-	return false
+	return stop
 end)
 
 function pcmdDK.shoulDarkSimUnit(unit)
@@ -20,7 +19,6 @@ function pcmdDK.shoulDarkSimUnit(unit)
 	end
 	return false
 end
-
 
 function pcmdDK.canCastPlagueLeech(timeLeft)
 	local frostFeverApplied, _, ffExpires, ffCaster = UnitDebuff("target","Frost Fever","player")
@@ -44,4 +42,10 @@ function pcmdDK.canCastPlagueLeech(timeLeft)
 	return false
 end
 
+function pcmdDK.gotBloodRunes()
+	if GetRuneType(1) ~= 4 and GetRuneType(2) ~= 4 then
+		return true
+	end 
+	return false
+end
 ProbablyEngine.library.register("pcmdDK", pcmdDK)
