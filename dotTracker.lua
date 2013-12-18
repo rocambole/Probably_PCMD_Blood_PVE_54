@@ -1,5 +1,45 @@
+--[[
+by PCMD
+usage:
+
+define the dot's you want to track:
+
+dotEngine.addDot(dotID, localizedName, {"intellect","mastery","crit"}, refrestAtSeconds )
+1. param= dotID = you dot's spellID
+2. param = localizedName = your dot's spellName
+3. param = modifiers Table =a Table with stats that modify the power of your dot
+4. param = refrestAtSeconds = time in seconds when you wan't to refresh your dot before it expires
+
+possible modifiers:
+attackPower
+crit
+dmg   (dmg buffs like Fluidity, tricks)
+mastery
+strength
+agility
+spirit
+
+
+usage inside your rotation
+
+{spellName, @dotEngine.shouldRefresh(dotName or ID, unit), target}
+for instance:
+
+{"Corruption", '@dotEngine.shouldRefresh("Corruption", "target"),"target"},
+{"Corruption", '@dotEngine.shouldRefresh("Corruption", "mousoever"),"mousoever"},
+{"Corruption", '@dotEngine.shouldRefresh("Corruption", "focus"),"focus"},
+
+all valid API units ( bossN, etc... are supported)
+
+
+if you don't know what modify your dot dmg read some guides / check tooltips@wowhead
+
+]]--
+
+
+
+
 dotEngine.dots = {
-	55078:{modifier: {"attackPower","crit","dmg","mastery"}, refreshAt: 2 }
 }
 dotEngine.namesToID = {}
 
@@ -61,6 +101,7 @@ end
 
 dotEngine.shouldRefresh = function(dotName, unit)
 	if not unit then unit = "target" end
+	local GUID = UnitGUID(unit)
 	local dotID, debuffName = dotEngine.getDotInfo(dotName)
 	if not debuffName then return false end -- something is wrong :) 
 	local debuff,_,expiresAt,caster = UnitDebuff(unit, debuffName)
@@ -70,8 +111,8 @@ dotEngine.shouldRefresh = function(dotName, unit)
 	local shouldRefresh = false
 	if dotEngine.dotIsKnown(dotID) then
 		for key,value in pairs(dotEngine.dots[dotID].modifiers) do
-			if dotEngine.currentDotStats[dotID].value then
-				if dotEngine.dotModifiers[value]() > dotEngine.currentDotStats[dotID][value]  then
+			if dotEngine.currentDotStats[dotID][GUID].value then
+				if dotEngine.dotModifiers[value]() > dotEngine.currentDotStats[dotID][GUID][value]  then
 					shoudRefresh = true
 					break
 				end
@@ -79,20 +120,21 @@ dotEngine.shouldRefresh = function(dotName, unit)
 		end
 	end
 	if shouldRefresh == true then
-		dotEngine.currentDotStats[dotID].isStrong = true
+		dotEngine.currentDotStats[dotID][GUID].isStrong = true
 	end
 	return shouldRefresh
 end
 
 dotEngine.shouldExtendDot = function(dotName, unit)
 	if not unit then unit = "target" end
+	local GUID = UnitGUID(unit)
 	local dotID, debuffName = dotEngine.getDotInfo(dotName)
 	if not debuffName then return false end -- something is wrong :) 
 	local debuff,_,_,caster = UnitDebuff(unit, debuffName)
 	if not debuff or (caster ~= 'player' and caster ~= 'pet') then
 		return false
 	end
-	if not dotEngine.shouldRefreshDot(spellID, unit) and dotEngine.currentDotStats[spellID].isStrong then return true end -- extend current "strong" dot's
+	if not dotEngine.shouldRefreshDot(spellID, unit) and dotEngine.currentDotStats[spellID][GUID].isStrong then return true end -- extend current "strong" dot's
 	return false
 end
 
@@ -110,24 +152,29 @@ dotEngine.logDotDmg = function(...)
 	local eventtype = select(2, ...)
 	local srcName = select(5 , ...)
 	local spellID = select(12, ...)
+	local destGUID = select(8, ...)
 
-	if  not eventtype or srcName ~= select(1,UnitName("player")) then return end
+	if  not destGUID or not eventtype or srcName ~= select(1,UnitName("player")) then return end
 	if not dotEngine.dotIsKnown(spellID) then return end
 	if eventtype == "SPELL_AURA_APPLIED" or eventtype == "SPELL_AURA_REFRESH" then
 		if not dotEngine.currentDotStats[spellID] then
 			dotEngine.currentDotStats[spellID] = {}
-			dotEngine.currentDotStats[spellID].isStrong = false
 		end
+		if not dotEngine.currentDotStats[spellID][destGUID] then 
+			dotEngine.currentDotStats[spellID][destGUID] = {}
+			dotEngine.currentDotStats[spellID][destGUID].isStrong = false
+		end
+		
 		for key,value in pairs(dotEngine.dots[dotID].modifiers) do
-			dotEngine.currentDotStats[dotID][value] = dotEngine.dotModifiers[value]()
+			dotEngine.currentDotStats[dotID][destGUID][value] = dotEngine.dotModifiers[value]()
 		end
 	end
 	if eventtype == "SPELL_AURA_REMOVED" then
-		if dotEngine.currentDotStats[spellID] then
+		if dotEngine.currentDotStats[spellID][destGUID] then
 			for key,value in pairs(dotEngine.dots[dotID].modifiers) do
-				dotEngine.currentDotStats[dotID][value] = 0
+				dotEngine.currentDotStats[dotID][destGUID][value] = 0
 			end
-			dotEngine.currentDotStats[dotID].isStrong = false
+			dotEngine.currentDotStats[dotID][destGUID].isStrong = false
 		end
 	end
 end
