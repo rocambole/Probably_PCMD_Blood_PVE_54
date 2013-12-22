@@ -59,9 +59,9 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 	{"Outbreak",	'target.debuff(blood plague).duration < 2'},
 
 	-- Multi target
-	{"Blood Boil",	{'modifier.multitarget','target.spell(48721).range'}},
+	{"Blood Boil",	{'modifier.multitarget','target.spell(56815).range'}},
 	{"Death and Decay",	{'modifier.shift','player.buff(Crimson Scourge)'}},
-	{"Blood Boil",	{'player.buff(Crimson Scourge)','target.spell(48721).range'}},
+	{"Blood Boil",	{'player.buff(Crimson Scourge)','target.spell(56815).range'}},
 
 	-- Rotation
 	{"Death Strike",	'player.health < 70'},

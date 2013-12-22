@@ -38,25 +38,24 @@ if you don't know what modify your dot dmg read some guides / check tooltips@wow
 
 
 
-
-dotEngine.dots = {
-}
+dotEngine = {}
+dotEngine.dots = {}
 dotEngine.namesToID = {}
-
 dotEngine.currentDotStats = {}
+
 dotEngine.dotModifiers = {
-	attackPower: dotEngine.totalAttackPower,
-	crit: GetCritChance,
-	dmg: dotEngine.getDamageBuff,
-	mastery: GetMastery,
-	intellect: dotEngine.getIntellect
-	strength: dotEngine.getStrength
-	agility: dotEngine.getAgility
-	spirit: dotEngine.getSpirit
+	["attackPower"]= dotEngine.totalAttackPower,
+	["crit"]= GetCritChance,
+	["dmg"]= dotEngine.getDamageBuff,
+	["mastery"]= GetMastery,
+	["intellect"]= dotEngine.getIntellect,
+	["strength"]= dotEngine.getStrength,
+	["agility"]= dotEngine.getAgility,
+	["spirit"]= dotEngine.getSpirit,
 }
 dotEngine.addDot = function(dotID, localizedName, modifiersTable, refrestAtSeconds )
 	dotEngine.namesToID[localizedName] = dotID
-	dotEngine.dots[dotID] = {name: localizedName, modifiers: modifiersTable, refrestAt: refrestAtSeconds}
+	dotEngine.dots[dotID] = {["name"]= localizedName, ["modifiers"]= modifiersTable, ["refrestAt"]= refrestAtSeconds}
 end
 
 dotEngine.dmgIncreaseBuffs = {
