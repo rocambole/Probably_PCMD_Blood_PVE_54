@@ -17,6 +17,7 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 		{"Lichborne",	{'player.health < 50','player.runicpower >= 40','player.spell.exists(Lichborne)'}},
 		{"Death Coil",	{'player.health < 90','player.runicpower >= 40','player.buff(lichborne)'}, "player"},
 	},"modifier.cooldowns"},
+
 	{"Rune Tap",	'player.health < 80'},
 
 	-- Interrupts
@@ -34,7 +35,6 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 	{"Dark Simulacrum ", '@pcmdDK.shoulDarkSimUnit("focus")' , "focus"},
 
 	{"Raise Dead",	{'modifier.cooldowns','!pet.alive'}},
-
 	{
 		{
 			{"Dancing Rune Weapon"},
@@ -75,8 +75,7 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 	-- Death Siphon when we need a bit of healing. (talent based)
 	{"Death Siphon",	'player.health < 60'},
 
-	{"Heart Strike",	{'target.debuff(Blood Plague).duration > 0','target.debuff(Frost Fever).duration > 0','@pcmdDK.bloodRuneCheck()'}},
-
+	{"Heart Strike",	{'target.debuff(Blood Plague).duration > 0','target.debuff(Frost Fever).duration > 0','@pcmdDK.gotBloodRunes()'}},
 	{"Rune Strike",	{'player.runicpower >= 30','!player.buff(lichborne)'}}, -- stop using Rune Strike if Lichborne is up
 
 	{"Horn of Winter"},

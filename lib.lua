@@ -20,7 +20,6 @@ function pcmdDK.shoulDarkSimUnit(unit)
 	return false
 end
 
-
 function pcmdDK.canCastPlagueLeech(timeLeft)
 	local frostFeverApplied, _, ffExpires, ffCaster = UnitDebuff("target","Frost Fever","player")
 	local bloodPlagueApplied, _, bpExpires, bpCaster = UnitDebuff("target","Blood Plague","player")
@@ -43,8 +42,10 @@ function pcmdDK.canCastPlagueLeech(timeLeft)
 	return false
 end
 
-function pcmdDK.bloodRuneCheck()
-	if GetRuneType(1) ~= 4 and GetRuneType(2) ~= 4 then return true end
+function pcmdDK.gotBloodRunes()
+	if GetRuneType(1) ~= 4 and GetRuneType(2) ~= 4 then
+		return true
+	end 
 	return false
 end
 

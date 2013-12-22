@@ -4,4 +4,5 @@
 ## Dependencies: Probably
 
 lib.lua
+dotTracker.lua
 rotation.lua
