@@ -7,6 +7,7 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 
 	{"Death and Decay",	'modifier.shift','ground'},
 	{"Anti-Magic Zone",	'modifier.alt','ground'},
+	{ '!/target player;\n/cast gorefiend\'s grasp;\n/targetlasttarget', 'modifier.control'},
 
 	-- Defensive cooldowns
 	{{
@@ -36,7 +37,7 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 	{"Raise Dead",	{'modifier.cooldowns','!pet.alive'}},
 	
 	{{
-		{"Dancing Rune Weapon",	'modifier.cooldowns'},
+		{"Dancing Rune Weapon",	{'modifier.cooldowns', 'toggle.drw'}}, --with a toggle so you don't overaggro & can use it as a deff cooldown
 		-- Requires engineering
 		{ '#gloves','modifier.cooldowns'},
 		-- Requires herbalism
@@ -56,11 +57,13 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 	{"Outbreak",	'target.debuff(blood plague).duration < 2'},
 
 	-- Multi target
-	{"Blood Boil",	{'modifier.multitarget','target.spell(48721).range'}},
+	{"Blood Boil",	{'modifier.multitarget','target.spell(56815).range'}},
 	{"Death and Decay",	{'modifier.shift','player.buff(Crimson Scourge)'}},
-	{"Blood Boil",	{'player.buff(Crimson Scourge)','target.spell(48721).range'}},
+	{"Blood Boil",	{'player.buff(Crimson Scourge)','target.spell(56815).range'}},
 
 	-- Rotation
+	{"Rune Strike",	{'player.runicpower >= 30', 'toggle.dps'}}, --push dps with better runestrike usage
+	
 	{"Death Strike",	'player.health < 70'},
 	{"Death Strike",	'player.buff(Blood Shield).duration <= 4'},
 	{"Soul Reaper",	'target.health <= 35'},
@@ -80,4 +83,11 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 	{"Plague Leech",	'@pcmdDK.canCastPlagueLeech(3)'},
 	{"Blood Tap", 'player.buff(Blood Charge).count >= 5'},
 	{"Empower Rune Weapon",	{'modifier.cooldowns','target.spell(56815).range','player.runes(death).count < 1','player.runes(frost).count < 1','player.runes(unholy).count < 1','player.runicpower < 30'}},
-})
+},
+{ -- out of combat
+	{ "48263" , "!player.buff(48263)" }, -- blood presence
+	{ "57330", {"target.exists", "target.alive" }}, --horn of winter 
+}, function()
+	ProbablyEngine.toggle.create('drw', 'Interface\\Icons\\ability_deathknight_dancingruneweapon', 'DancingRuneWeapon', 'Toggle dancing rune weapon usage')
+	ProbablyEngine.toggle.create('dps', 'Interface\\Icons\\ability_deathknight_runestrike', 'DPSmore', 'Turn on for better RuneStrike usage, could cause survivability problems')
+end)
