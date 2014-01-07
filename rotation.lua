@@ -4,7 +4,7 @@
 ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 	-- Blood presence
 	{"Blood Presence",	'!player.buff(Blood Presence)'},
-
+	{"Pause",	"modifier.control"},
 	{"Death and Decay",	'modifier.shift','ground'},
 	{"Anti-Magic Zone",	'modifier.alt','ground'},
 
@@ -59,9 +59,9 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 	{"Outbreak",	'target.debuff(blood plague).duration < 2'},
 
 	-- Multi target
-	{"Blood Boil",	{'modifier.multitarget','target.spell(56815).range'}},
+	{"Blood Boil",	{'modifier.multitarget','target.range <= 10'}},
 	{"Death and Decay",	{'modifier.shift','player.buff(Crimson Scourge)'}},
-	{"Blood Boil",	{'player.buff(Crimson Scourge)','target.spell(56815).range'}},
+	{"Blood Boil",	{'player.buff(Crimson Scourge)','target.range <= 10'}},
 
 	-- Rotation
 	{"Death Strike",	'player.health < 70'},
