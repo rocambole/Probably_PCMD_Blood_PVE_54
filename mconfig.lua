@@ -105,7 +105,7 @@ end
 
 function mConfig:addCheckBox(key, text, tooltip, defaultValue)
     if not defaultValue then defaultValue = false end
-    if not self.values[key] then self.values[key] = defaultValue end
+    if self.values[key] == nil then self.values[key] = defaultValue end
 
     local optionFrame = CreateFrame("Frame", nil, self.frames.scrollFrame)
     optionFrame:SetSize(OPTIONS_WIDTH, OPTIONS_HEIGHT)
@@ -349,6 +349,14 @@ function mConfig:Toggle()
     end
 end
 function mConfig:get(key)
+	if not self.values[key] then 
+		if not self.defaults[key] then
+			print("mConfig error: ".. key.." not found")
+			return 0
+		else
+			return self.defaults[key]
+		end
+	end
     return self.values[key]
 end
 function mConfig:set(key, value)
