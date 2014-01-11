@@ -4,21 +4,34 @@
 ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 	-- Blood presence
 	{"Blood Presence",	'!player.buff(Blood Presence)'},
-	{"Pause",	"modifier.control"},
-	{"Death and Decay",	'modifier.shift','ground'},
-	{"Anti-Magic Zone",	'modifier.alt','ground'},
+	
+	{"Pause",	'@pcmdDK.modifierActionForSpellIsAlt("PAUSE")'},
+	{"Pause",	'@pcmdDK.modifierActionForSpellIsShift("PAUSE")'},
+	{"Pause",	'@pcmdDK.modifierActionForSpellIsControl("PAUSE")'},
+	
+	{"Death and Decay",	'@pcmdDK.modifierActionForSpellIsAlt("DND")'},
+	{"Death and Decay",	'@pcmdDK.modifierActionForSpellIsShift("DND")','ground'},
+	{"Death and Decay",	'@pcmdDK.modifierActionForSpellIsControl("DND")','ground'},
+	
+	{"Anti-Magic Zone",	'@pcmdDK.modifierActionForSpellIsAlt("ANTIMAGICZONE")'},
+	{"Anti-Magic Zone",	'@pcmdDK.modifierActionForSpellIsShift("ANTIMAGICZONE")','ground'},
+	{"Anti-Magic Zone",	'@pcmdDK.modifierActionForSpellIsControl("ANTIMAGICZONE")','ground'},
+	
+	{"Army of the Dead",	'@pcmdDK.modifierActionForSpellIsAlt("ARMY")'},
+	{"Army of the Dead",	'@pcmdDK.modifierActionForSpellIsShift("ARMY")'},
+	{"Army of the Dead",	'@pcmdDK.modifierActionForSpellIsControl("ARMY")'},
 
 	-- Defensive cooldowns
 	{{
 		{"#5512", 'player.health < 70'}, --healthstone
-		{"Icebound Fortitude",	'player.health <= 30'},
-		{"Vampiric Blood",	{'modifier.cooldowns','player.health < 40'}},
-		{"Death Pact",	{'player.health < 50','@pcmdDK.hasGhoul()'}},
-		{"Lichborne",	{'player.health < 50','player.runicpower >= 40','player.spell.exists(Lichborne)'}},
+		{"Icebound Fortitude",	'@pcmdDK.configUnitHpBelowThreshold("ibfPercentage","player")'},
+		{"Vampiric Blood",	{'modifier.cooldowns','@pcmdDK.configUnitHpBelowThreshold("vbPercentage","player")'}},
+		{"Death Pact",	{'@pcmdDK.configUnitHpBelowThreshold("dpPercentage","player")','@pcmdDK.hasGhoul()'}},
+		{"Lichborne",	{'@pcmdDK.configUnitHpBelowThreshold("lichbornePercentage","player")','player.runicpower >= 40','player.spell.exists(Lichborne)'}},
 		{"Death Coil",	{'player.health < 90','player.runicpower >= 40','player.buff(lichborne)'}, "player"},
 	},"modifier.cooldowns"},
 
-	{"Rune Tap",	'player.health < 80'},
+	{"Rune Tap",	'@pcmdDK.configUnitHpBelowThreshold("runeTapPercentage","player")'},
 
 	-- Interrupts
 	{"mind freeze",	'target.shouldInterrupt'},
@@ -59,14 +72,16 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 	{"Outbreak",	'target.debuff(blood plague).duration < 2'},
 
 	-- Multi target
-	{"Death and Decay",	{'modifier.shift','player.buff(Crimson Scourge)'}},
+	{"Death and Decay",	{'@pcmdDK.modifierActionForSpellIsAlt("DND")','player.buff(Crimson Scourge)'}},
+	{"Death and Decay",	{'@pcmdDK.modifierActionForSpellIsShift("DND")','player.buff(Crimson Scourge)'}},
+	{"Death and Decay",	{'@pcmdDK.modifierActionForSpellIsControl("DND")','player.buff(Crimson Scourge)'}},
 	{"Blood Boil",	{'modifier.multitarget','target.range <= 10'}},
 	{"Rune Strike",	{'player.runicpower >= 30','toggle.DPS'}},
 	{"Blood Boil",	{'player.buff(Crimson Scourge)','target.range <= 10'}},
 
 	-- Rotation
 	
-	{"Death Strike",	'player.health < 70'},
+	{"Death Strike",	'@pcmdDK.configUnitHpBelowThreshold("deathStrikePercentage","player")'},
 	{"Death Strike",	'player.buff(Blood Shield).duration <= 4'},
 	{"Soul Reaper",	'target.health <= 35'},
 	{"Plague Strike",	'target.debuff(Blood Plague).duration = 0'},
@@ -86,7 +101,7 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 	{"Empower Rune Weapon",	{'modifier.cooldowns','target.spell(56815).range','player.runes(death).count < 1','player.runes(frost).count < 1','player.runes(unholy).count < 1','player.runicpower < 30'}},
 }, {
 	-- Out Of Combat
-	{"Horn of Winter"},
+	{"Horn of Winter", '@pcmdDK.configShouldUseSpell("useOutOfCombatHorn")'},
 
 }, function()
 ProbablyEngine.toggle.create('DPS', 'Interface\\Icons\\Spell_DeathKnight_DarkConviction', 'Push your DPS with Rune Strike', 'Toggle On if you wan\' to prioritize Rune Strike over Death Strike')
