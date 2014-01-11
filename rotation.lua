@@ -13,7 +13,7 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 		{"#5512", 'player.health < 70'}, --healthstone
 		{"Icebound Fortitude",	'player.health <= 30'},
 		{"Vampiric Blood",	{'modifier.cooldowns','player.health < 40'}},
-		{"Death Pact",	{'player.health < 50','pet.alive'}},
+		{"Death Pact",	{'player.health < 50','@pcmdDK.hasGhoul()'}},
 		{"Lichborne",	{'player.health < 50','player.runicpower >= 40','player.spell.exists(Lichborne)'}},
 		{"Death Coil",	{'player.health < 90','player.runicpower >= 40','player.buff(lichborne)'}, "player"},
 	},"modifier.cooldowns"},
@@ -34,10 +34,10 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 	{"Dark Simulacrum ", '@pcmdDK.shoulDarkSimUnit("target")' , "target"},
 	{"Dark Simulacrum ", '@pcmdDK.shoulDarkSimUnit("focus")' , "focus"},
 
-	{"Raise Dead",	{'modifier.cooldowns','!pet.alive'}},
+	{"Raise Dead",	{'modifier.cooldowns','!@pcmdDK.hasGhoul()'}},
 	{
 		{
-			{"Dancing Rune Weapon"},
+			{"Dancing Rune Weapon", "!toggle.DRW"},
 			-- Requires engineering
 			{ '#gloves'},
 			-- Requires herbalism
@@ -59,11 +59,13 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 	{"Outbreak",	'target.debuff(blood plague).duration < 2'},
 
 	-- Multi target
-	{"Blood Boil",	{'modifier.multitarget','target.range <= 10'}},
 	{"Death and Decay",	{'modifier.shift','player.buff(Crimson Scourge)'}},
+	{"Blood Boil",	{'modifier.multitarget','target.range <= 10'}},
+	{"Rune Strike",	{'player.runicpower >= 30','toggle.DPS'}},
 	{"Blood Boil",	{'player.buff(Crimson Scourge)','target.range <= 10'}},
 
 	-- Rotation
+	
 	{"Death Strike",	'player.health < 70'},
 	{"Death Strike",	'player.buff(Blood Shield).duration <= 4'},
 	{"Soul Reaper",	'target.health <= 35'},
@@ -82,4 +84,11 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 	{"Plague Leech",	'@pcmdDK.canCastPlagueLeech(3)'},
 	{"Blood Tap", 'player.buff(Blood Charge).count >= 5'},
 	{"Empower Rune Weapon",	{'modifier.cooldowns','target.spell(56815).range','player.runes(death).count < 1','player.runes(frost).count < 1','player.runes(unholy).count < 1','player.runicpower < 30'}},
-})
+}, {
+	-- Out Of Combat
+	{"Horn of Winter"},
+
+}, function()
+ProbablyEngine.toggle.create('DPS', 'Interface\\Icons\\Spell_DeathKnight_DarkConviction', 'Push your DPS with Rune Strike', 'Toggle On if you wan\' to prioritize Rune Strike over Death Strike')
+ProbablyEngine.toggle.create('DRW', 'Interface\\Icons\\INV_Sword_07', 'stop using Dancing Rune Weapon', 'Toggle On if you dont\'t want to use DRW on CD' )
+end)
