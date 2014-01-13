@@ -2,6 +2,8 @@
 ## Title: Probably - PCMD Blood PVE 5.4
 ## Notes: ProbablyEngine Custom Blood Death Knight
 ## Dependencies: Probably
+## SavedVariablesPerCharacter: mConfigData
 
+mConfig.lua
 lib.lua
 rotation.lua

@@ -5,47 +5,63 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 	-- Blood presence
 	{"Blood Presence",	'!player.buff(Blood Presence)'},
 
-	{"Death and Decay",	'modifier.shift','ground'},
-	{"Anti-Magic Zone",	'modifier.alt','ground'},
-	{ '!/target player;\n/cast gorefiend\'s grasp;\n/targetlasttarget', 'modifier.control'},
+	{"Pause",	'@pcmdDK.modifierActionForSpellIsAlt("PAUSE")'},
+	{"Pause",	'@pcmdDK.modifierActionForSpellIsShift("PAUSE")'},
+	{"Pause",	'@pcmdDK.modifierActionForSpellIsControl("PAUSE")'},
+	
+	{"Death and Decay",	'@pcmdDK.modifierActionForSpellIsAlt("DND")'},
+	{"Death and Decay",	'@pcmdDK.modifierActionForSpellIsShift("DND")','ground'},
+	{"Death and Decay",	'@pcmdDK.modifierActionForSpellIsControl("DND")','ground'},
+	
+	{"Anti-Magic Zone",	'@pcmdDK.modifierActionForSpellIsAlt("ANTIMAGICZONE")'},
+	{"Anti-Magic Zone",	'@pcmdDK.modifierActionForSpellIsShift("ANTIMAGICZONE")','ground'},
+	{"Anti-Magic Zone",	'@pcmdDK.modifierActionForSpellIsControl("ANTIMAGICZONE")','ground'},
+	
+	{"Army of the Dead",	'@pcmdDK.modifierActionForSpellIsAlt("ARMY")'},
+	{"Army of the Dead",	'@pcmdDK.modifierActionForSpellIsShift("ARMY")'},
+	{"Army of the Dead",	'@pcmdDK.modifierActionForSpellIsControl("ARMY")'},
 
 	-- Defensive cooldowns
 	{{
 		{"#5512", 'player.health < 70'}, --healthstone
-		{"Icebound Fortitude",	'player.health <= 30'},
-		{"Vampiric Blood",	{'modifier.cooldowns','player.health < 40'},
-		{"Death Pact",	{'player.health < 50','pet.alive'}},
-		{"Lichborne",	{'player.health < 50','player.runicpower >= 40','player.spell.exists(Lichborne)'}},
+		{"Icebound Fortitude",	'@pcmdDK.configUnitHpBelowThreshold("ibfPercentage","player")'},
+		{"Vampiric Blood",	{'modifier.cooldowns','@pcmdDK.configUnitHpBelowThreshold("vbPercentage","player")'}},
+		{"Death Pact",	{'@pcmdDK.configUnitHpBelowThreshold("dpPercentage","player")','@pcmdDK.hasGhoul()'}},
+		{"Lichborne",	{'@pcmdDK.configUnitHpBelowThreshold("lichbornePercentage","player")','player.runicpower >= 40','player.spell.exists(Lichborne)'}},
 		{"Death Coil",	{'player.health < 90','player.runicpower >= 40','player.buff(lichborne)'}, "player"},
-	},"modifier.cooldowns"}
-	{"Rune Tap",	'player.health < 80'},
+	},"modifier.cooldowns"},
+
+	{"Rune Tap",	'@pcmdDK.configUnitHpBelowThreshold("runeTapPercentage","player")'},
 
 	-- Interrupts
 	{"mind freeze",	'target.shouldInterrupt'},
 	{"mind freeze",	'focus.shouldInterrupt', "focus"},
-	{"Strangulate",	{'target.spell(mind freeze).range=0','!modifier.last(47528)'}},
-	{"Strangulate",	{'mouseover.shouldInterrupt','focus.spell.range(mind freeze)=0','!modifier.last(47528)'}, "mouseover"},
-	{"Strangulate",	{'focus.shouldInterrupt','focus.spell.range(mind freeze)=0','!modifier.last(47528)'}, "focus" },
+	{"Strangulate",	{'!target.spell(47528).range','!player.modifier.last(47528)'}},
+	{"Strangulate",	{'mouseover.shouldInterrupt','!focus.spell(47528).range','!modifier.last(47528)'}, "mouseover"},
+	{"Strangulate",	{'focus.shouldInterrupt','!focus.spell(47528).range','!modifier.last(47528)'}, "focus" },
 	{"Asphyxiate",	{'target.shouldInterrupt','!modifier.last(47528)'}},
-	{"Asphyxiate",	{'mouseover.shouldInterrupt','!modifier.last(47528)'}}, "mouseover"},
+	{"Asphyxiate",	{'mouseover.shouldInterrupt','!modifier.last(47528)'}, "mouseover"},
 	{"Asphyxiate",	{'focus.shouldInterrupt','!modifier.last(47528)'}, "focus"},
 
 	-- Spell Steal
 	{"Dark Simulacrum ", '@pcmdDK.shoulDarkSimUnit("target")' , "target"},
 	{"Dark Simulacrum ", '@pcmdDK.shoulDarkSimUnit("focus")' , "focus"},
 
-	{"Raise Dead",	{'modifier.cooldowns','!pet.alive'}},
-	
-	{{
-		{"Dancing Rune Weapon",	{'modifier.cooldowns', 'toggle.drw'}}, --with a toggle so you don't overaggro & can use it as a deff cooldown
-		-- Requires engineering
-		{ '#gloves','modifier.cooldowns'},
-		-- Requires herbalism
-		{"Lifeblood",	'modifier.cooldowns'},
-		-- Racials
-		{ "Berserking",	'modifier.cooldowns'},
-		{ "Blood Fury",	'modifier.cooldowns'},
-	}, {'modifier.cooldowns', 'target.spell(56815).range'}},
+
+	{"Raise Dead",	{'modifier.cooldowns','!@pcmdDK.hasGhoul()'}},
+	{
+		{
+			{"Dancing Rune Weapon", "!toggle.DRW"},
+			-- Requires engineering
+			{ '#gloves'},
+			-- Requires herbalism
+			{"Lifeblood"},
+			-- Racials
+			{ "Berserking"},
+			{ "Blood Fury"},
+		},
+		{'modifier.cooldowns', 'target.spell(56815).range'}
+	},
 
 	-- Buff
 	{"Bone Shield",	'!player.buff(Bone Shield)'},
@@ -57,14 +73,17 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 	{"Outbreak",	'target.debuff(blood plague).duration < 2'},
 
 	-- Multi target
-	{"Blood Boil",	{'modifier.multitarget','target.spell(56815).range'}},
-	{"Death and Decay",	{'modifier.shift','player.buff(Crimson Scourge)'}},
-	{"Blood Boil",	{'player.buff(Crimson Scourge)','target.spell(56815).range'}},
+
+	{"Death and Decay",	{'@pcmdDK.modifierActionForSpellIsAlt("DND")','player.buff(Crimson Scourge)'}},
+	{"Death and Decay",	{'@pcmdDK.modifierActionForSpellIsShift("DND")','player.buff(Crimson Scourge)'}},
+	{"Death and Decay",	{'@pcmdDK.modifierActionForSpellIsControl("DND")','player.buff(Crimson Scourge)'}},
+	{"Blood Boil",	{'modifier.multitarget','target.range <= 10'}},
+	{"Rune Strike",	{'player.runicpower >= 30','toggle.DPS'}},
+	{"Blood Boil",	{'player.buff(Crimson Scourge)','target.range <= 10'}},
 
 	-- Rotation
-	{"Rune Strike",	{'player.runicpower >= 30', 'toggle.dps'}}, --push dps with better runestrike usage
 	
-	{"Death Strike",	'player.health < 70'},
+	{"Death Strike",	'@pcmdDK.configUnitHpBelowThreshold("deathStrikePercentage","player")'},
 	{"Death Strike",	'player.buff(Blood Shield).duration <= 4'},
 	{"Soul Reaper",	'target.health <= 35'},
 	{"Plague Strike",	'target.debuff(Blood Plague).duration = 0'},
@@ -76,18 +95,18 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 	{"Death Siphon",	'player.health < 60'},
 
 	{"Heart Strike",	{'target.debuff(Blood Plague).duration > 0','target.debuff(Frost Fever).duration > 0','@pcmdDK.gotBloodRunes()'}},
-
 	{"Rune Strike",	{'player.runicpower >= 30','!player.buff(lichborne)'}}, -- stop using Rune Strike if Lichborne is up
 
 	{"Horn of Winter"},
 	{"Plague Leech",	'@pcmdDK.canCastPlagueLeech(3)'},
 	{"Blood Tap", 'player.buff(Blood Charge).count >= 5'},
 	{"Empower Rune Weapon",	{'modifier.cooldowns','target.spell(56815).range','player.runes(death).count < 1','player.runes(frost).count < 1','player.runes(unholy).count < 1','player.runicpower < 30'}},
-},
-{ -- out of combat
-	{ "48263" , "!player.buff(48263)" }, -- blood presence
-	{ "57330", {"target.exists", "target.alive" }}, --horn of winter 
+
+}, {
+	-- Out Of Combat
+	{"Horn of Winter", '@pcmdDK.configShouldUseSpell("useOutOfCombatHorn")'},
+
 }, function()
-	ProbablyEngine.toggle.create('drw', 'Interface\\Icons\\ability_deathknight_dancingruneweapon', 'DancingRuneWeapon', 'Toggle dancing rune weapon usage')
-	ProbablyEngine.toggle.create('dps', 'Interface\\Icons\\ability_deathknight_runestrike', 'DPSmore', 'Turn on for better RuneStrike usage, could cause survivability problems')
+ProbablyEngine.toggle.create('DPS', 'Interface\\Icons\\Spell_DeathKnight_DarkConviction', 'Push your DPS with Rune Strike', 'Toggle On if you wan\' to prioritize Rune Strike over Death Strike')
+ProbablyEngine.toggle.create('DRW', 'Interface\\Icons\\INV_Sword_07', 'stop using Dancing Rune Weapon', 'Toggle On if you dont\'t want to use DRW on CD' )
 end)
