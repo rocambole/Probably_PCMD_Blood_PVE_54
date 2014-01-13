@@ -98,7 +98,7 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 
 	{"Horn of Winter"},
 	{"Plague Leech",	'@pcmdDK.canCastPlagueLeech(3)'},
-	{"Blood Tap", 'player.buff(Blood Charge).count >= 5'},
+	{"Blood Tap", '@pcmdDK.shouldBloodTap()'},
 	{"Empower Rune Weapon",	{'modifier.cooldowns','target.spell(56815).range','player.runes(death).count < 1','player.runes(frost).count < 1','player.runes(unholy).count < 1','player.runicpower < 30'}},
 }, {
 	-- Out Of Combat

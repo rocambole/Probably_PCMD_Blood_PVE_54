@@ -41,6 +41,15 @@ function pcmdDK.canCastPlagueLeech(timeLeft)
 	end
 	return false
 end
+
+function pcmdDK.gotBloodRunes()
+	if GetRuneType(1) ~= 4 and GetRuneType(2) ~= 4 then
+		return true
+	end 
+	return false
+end
+
+
 function pcmdDK.hasGhoul()
 		if ProbablyEngine.module.player.specName == "Unholy" then
 			if UnitExists("pet") == nil then return false end
