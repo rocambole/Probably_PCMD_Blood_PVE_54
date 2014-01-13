@@ -42,6 +42,13 @@ function pcmdDK.canCastPlagueLeech(timeLeft)
 	return false
 end
 
+function pcmdDK.shouldBloodTap()
+	local _, _, _, count, _, _, _, _, _ = UnitBuff("player","Blood Charge")
+	if count == nil then count = 0 end	
+	if count >= 5 then return true end
+	return false
+end
+
 function pcmdDK.gotBloodRunes()
 	if GetRuneType(1) ~= 4 and GetRuneType(2) ~= 4 then
 		return true
