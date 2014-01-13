@@ -4,7 +4,7 @@
 ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 	-- Blood presence
 	{"Blood Presence",	'!player.buff(Blood Presence)'},
-
+	
 	{"Pause",	'@pcmdDK.modifierActionForSpellIsAlt("PAUSE")'},
 	{"Pause",	'@pcmdDK.modifierActionForSpellIsShift("PAUSE")'},
 	{"Pause",	'@pcmdDK.modifierActionForSpellIsControl("PAUSE")'},
@@ -36,7 +36,7 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 	-- Interrupts
 	{"mind freeze",	'target.shouldInterrupt'},
 	{"mind freeze",	'focus.shouldInterrupt', "focus"},
-	{"Strangulate",	{'!target.spell(47528).range','!player.modifier.last(47528)'}},
+	{"Strangulate",	{'target.shouldInterrupt','!target.spell(47528).range','!player.modifier.last(47528)'}},
 	{"Strangulate",	{'mouseover.shouldInterrupt','!focus.spell(47528).range','!modifier.last(47528)'}, "mouseover"},
 	{"Strangulate",	{'focus.shouldInterrupt','!focus.spell(47528).range','!modifier.last(47528)'}, "focus" },
 	{"Asphyxiate",	{'target.shouldInterrupt','!modifier.last(47528)'}},
@@ -47,8 +47,8 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 	{"Dark Simulacrum ", '@pcmdDK.shoulDarkSimUnit("target")' , "target"},
 	{"Dark Simulacrum ", '@pcmdDK.shoulDarkSimUnit("focus")' , "focus"},
 
-
-	{"Raise Dead",	{'modifier.cooldowns','!@pcmdDK.hasGhoul()'}},
+	{"Raise Dead",	{'modifier.cooldowns','toggle.RD','!@pcmdDK.hasGhoul()'}},
+	{"Raise Dead",	{'!toggle.RD','@pcmdDK.configUnitHpBelowThreshold("dpPercentage","player")','!@pcmdDK.hasGhoul()'}},
 	{
 		{
 			{"Dancing Rune Weapon", "!toggle.DRW"},
@@ -73,7 +73,6 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 	{"Outbreak",	'target.debuff(blood plague).duration < 2'},
 
 	-- Multi target
-
 	{"Death and Decay",	{'@pcmdDK.modifierActionForSpellIsAlt("DND")','player.buff(Crimson Scourge)'}},
 	{"Death and Decay",	{'@pcmdDK.modifierActionForSpellIsShift("DND")','player.buff(Crimson Scourge)'}},
 	{"Death and Decay",	{'@pcmdDK.modifierActionForSpellIsControl("DND")','player.buff(Crimson Scourge)'}},
@@ -101,12 +100,12 @@ ProbablyEngine.rotation.register_custom(250, "PCMD Blood PVE 5.4", {
 	{"Plague Leech",	'@pcmdDK.canCastPlagueLeech(3)'},
 	{"Blood Tap", 'player.buff(Blood Charge).count >= 5'},
 	{"Empower Rune Weapon",	{'modifier.cooldowns','target.spell(56815).range','player.runes(death).count < 1','player.runes(frost).count < 1','player.runes(unholy).count < 1','player.runicpower < 30'}},
-
 }, {
 	-- Out Of Combat
-	{"Horn of Winter", '@pcmdDK.configShouldUseSpell("useOutOfCombatHorn")'},
+	{"Horn of Winter", {'@pcmdDK.configShouldUseSpell("useOutOfCombatHorn")','!player.buff(Horn of Winter)'}},
 
 }, function()
-ProbablyEngine.toggle.create('DPS', 'Interface\\Icons\\Spell_DeathKnight_DarkConviction', 'Push your DPS with Rune Strike', 'Toggle On if you wan\' to prioritize Rune Strike over Death Strike')
-ProbablyEngine.toggle.create('DRW', 'Interface\\Icons\\INV_Sword_07', 'stop using Dancing Rune Weapon', 'Toggle On if you dont\'t want to use DRW on CD' )
+	ProbablyEngine.toggle.create('DPS', 'Interface\\Icons\\Spell_DeathKnight_DarkConviction', 'Push your DPS with Rune Strike', 'Toggle On if you want to prioritize Rune Strike over Death Strike')
+	ProbablyEngine.toggle.create('DRW', 'Interface\\Icons\\INV_Sword_07', 'Stop using Dancing Rune Weapon', 'Toggle Off if you dont want to use DRW on CD' )
+	ProbablyEngine.toggle.create('RD', 'Interface\\Icons\\spell_shadow_animatedead', 'Enable or Disable Raise Dead', 'Toggle On to use Raise Dead for DPS / Toggle Off to use Raise Dead for Death Pact' )
 end)
